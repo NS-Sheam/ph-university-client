@@ -1,13 +1,17 @@
-import { Layout, Menu } from "antd";
+import { Layout, Menu, MenuProps } from "antd";
 const { Header, Content, Footer, Sider } = Layout;
-import { UploadOutlined, UserOutlined, VideoCameraOutlined } from "@ant-design/icons";
-import { createElement } from "react";
+import { NavLink, Outlet } from "react-router-dom";
 
-const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].map((icon, index) => ({
-  key: String(index + 1),
-  icon: createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+const items: MenuProps["items"] = [
+  {
+    key: "Dashboard",
+    label: <NavLink to="/admin/dashboard">Dashboard</NavLink>,
+  },
+  {
+    key: "User Management",
+    label: "User Management",
+  },
+];
 
 const MainLayout = () => {
   return (
@@ -49,7 +53,7 @@ const MainLayout = () => {
               minHeight: 360,
             }}
           >
-            <h1>Tha main content should here</h1>
+            <Outlet />
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
