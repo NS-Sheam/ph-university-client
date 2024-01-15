@@ -11,7 +11,7 @@ const items = [UserOutlined, VideoCameraOutlined, UploadOutlined, UserOutlined].
 
 const MainLayout = () => {
   return (
-    <Layout>
+    <Layout style={{ height: "100vh" }}>
       <Sider
         breakpoint="lg"
         collapsedWidth="0"
@@ -22,7 +22,9 @@ const MainLayout = () => {
           console.log(collapsed, type);
         }}
       >
-        <div className="demo-logo-vertical" />
+        <div className="demo-logo-vertical">
+          <h1>PH University</h1>
+        </div>
         <Menu
           theme="dark"
           mode="inline"
