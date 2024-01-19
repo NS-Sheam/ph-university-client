@@ -1,9 +1,9 @@
-const CreateStudent = () => {
+const StudentDashboard = () => {
   return (
     <div>
-      <h1>CreateStudent</h1>
+      <h1>StudentDashboard</h1>
     </div>
   );
 };
 
-export default CreateStudent;
+export default StudentDashboard;
