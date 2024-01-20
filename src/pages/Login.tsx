@@ -14,7 +14,7 @@ const Login = () => {
       password: "admin123",
     },
   });
-  const [login, { isError, isLoading, isSuccess }] = useLoginMutation();
+  const [login] = useLoginMutation();
 
   const onSubmit = async (data) => {
     const userInfo = {
