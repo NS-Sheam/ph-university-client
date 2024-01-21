@@ -3,7 +3,7 @@ import { Controller } from "react-hook-form";
 
 const PHInput = ({ type, name, label }) => {
   return (
-    <>
+    <div style={{ marginBottom: "20px" }}>
       {label ? label : null}
       <Controller
         name={name}
@@ -15,7 +15,7 @@ const PHInput = ({ type, name, label }) => {
           />
         )}
       />
-    </>
+    </div>
   );
 };
 
