@@ -32,7 +32,7 @@ const Login = () => {
       navigate(`/${user?.role}/dashboard`);
       toast.success("Login successfully!", { id: toastId, duration: 2000 });
     } catch (err) {
-      toast.error("Something went wrong!");
+      console.log(err);
     }
   };
 
