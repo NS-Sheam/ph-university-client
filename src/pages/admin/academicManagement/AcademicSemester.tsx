@@ -11,7 +11,7 @@ const AcademicSemester = () => {
   const { data: semesterData } = useGetAllSemestersQuery(undefined);
   console.log(semesterData);
 
-  const tableData = semesterData?.data.map(({ _id, name, startMonth, endMonth, year }) => ({
+  const tableData = semesterData?.data?.map(({ _id, name, startMonth, endMonth, year }) => ({
     key: _id,
     name,
     startMonth,
