@@ -5,26 +5,26 @@ import { toast } from "sonner";
 import PHInput from "../../../components/form/PHInput";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAddAcademicFacultyMutation } from "../../../redux/features/admin/academicManagement.api";
+import { TResponse } from "../../../types";
+import { TAcademicFaculty } from "../../../types/academicManagement.type";
 
 const CreateAcademicFaculty = () => {
-  //   const [addAcademicSemester] = useAddAcademicSemesterMutation();
+  const [addAcademicFaculty] = useAddAcademicFacultyMutation();
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const toastId = toast.loading("Creating academic semester...");
+    const toastId = toast.loading("Creating academic faculty...");
 
-    // const academicFacultyData = {
-    //   name
-    // };
-    console.log(data);
-    // try {
-    //   const res = (await addAcademicSemester(data)) as TResponse<TAcademicSemester>;
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
-    //   }
-    // } catch (error) {
-    //   toast.error("something went wrong", { id: toastId });
-    // }
+    try {
+      const res = (await addAcademicFaculty(data)) as TResponse<TAcademicFaculty>;
+
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
+      }
+    } catch (error) {
+      toast.error("something went wrong", { id: toastId });
+    }
   };
 
   const academicFacultySchema = z.object({

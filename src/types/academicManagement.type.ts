@@ -9,3 +9,11 @@ export type TAcademicSemester = {
   updatedAt: string;
   __v: number;
 };
+export type TAcademicFaculty = {
+  _id: string;
+  name: string;
+  code: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
