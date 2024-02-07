@@ -2,8 +2,11 @@ import { Button, Pagination, Space, Table, TableColumnsType, TableProps } from "
 import { useState } from "react";
 import { TQueryParams, TStudent } from "../../../types";
 import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
+import { Link } from "react-router-dom";
 
-export type TTableData = Pick<TStudent, "fullName" | "id" | "email" | "contactNo">;
+export type TTableData = Pick<TStudent, "fullName" | "id" | "email" | "contactNo"> & {
+  key: string;
+};
 const StudentData = () => {
   const [params, setParams] = useState<TQueryParams[] | []>([]);
   const [page, setPage] = useState<number>(1);
@@ -48,13 +51,17 @@ const StudentData = () => {
     {
       title: "Action",
       dataIndex: "action",
-      render: () => (
-        <Space>
-          <Button>Details</Button>
-          <Button>Edit</Button>
-          <Button>Block</Button>
-        </Space>
-      ),
+      render: (item, record) => {
+        return (
+          <Space>
+            <Button>Details</Button>
+            <Link to={`/admin/student-data/${record?.key}`}>
+              <Button>Edit</Button>
+            </Link>
+            <Button>Block</Button>
+          </Space>
+        );
+      },
       width: "1%",
     },
   ];

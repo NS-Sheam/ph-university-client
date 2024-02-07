@@ -78,10 +78,7 @@ const CreateStudent = () => {
   return (
     <Row>
       <Col span={24}>
-        <PHForm
-          onSubmit={onSubmit}
-          defaultValues={studentDefaultValues}
-        >
+        <PHForm onSubmit={onSubmit}>
           <Divider>Personal Info.</Divider>
           <Row gutter={8}>
             <Col
