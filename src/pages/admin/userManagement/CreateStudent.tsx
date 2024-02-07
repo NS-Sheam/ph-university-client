@@ -11,44 +11,6 @@ import {
 } from "../../../redux/features/admin/academicManagement.api";
 import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
 
-const studentDummyData = {
-  password: "student123",
-  student: {
-    name: {
-      firstName: "Mr.",
-      middleName: "Student",
-      lastName: "2",
-    },
-    gender: "male",
-    dateOfBirth: "1990-01-01",
-    bloodGroup: "A+",
-
-    email: "sheam2@gmail.com",
-    contactNo: "123-456-7890",
-    emergencyContactNo: "987-654-3210",
-    presentAddress: "123 Main St, Cityville",
-    permanentAddress: "123 Main St, Cityville",
-
-    guardian: {
-      fatherName: "John Smith Sr.",
-      fatherOccupation: "Engineer",
-      fatherContactNo: "111-222-3333",
-      motherName: "Jane Smith",
-      motherOccupation: "Doctor",
-      motherContactNo: "444-555-6666",
-    },
-    localGuardian: {
-      name: "Alice Doe",
-      occupation: "Teacher",
-      contactNo: "777-888-9999",
-      address: "456 Oak St, Townsville",
-    },
-
-    admissionSemester: "65b9f6da048d3715e04080a1",
-    academicDepartment: "65b9f5f2048d3715e040809a",
-  },
-};
-
 const studentDefaultValues = {
   name: {
     firstName: "Mr.",
@@ -83,7 +45,7 @@ const studentDefaultValues = {
   academicDepartment: "65b9f5f2048d3715e040809a",
 };
 const CreateStudent = () => {
-  const [addStudent, isLoading, error] = useAddStudentMutation();
+  const [addStudent] = useAddStudentMutation();
 
   const { data: sData, isLoading: sIsLoading } = useGetAllSemestersQuery(undefined);
   const { data: dData, isLoading: dIsLoading } = useGetAllAcademicDepartmentsQuery(undefined);
