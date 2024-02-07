@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TQueryParams, TStudent } from "../../../types";
 import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
 
-export type TTableData = Pick<TStudent, "fullName" | "id">;
+export type TTableData = Pick<TStudent, "fullName" | "id" | "email" | "contactNo">;
 const StudentData = () => {
   const [params, setParams] = useState<TQueryParams[] | []>([]);
   const [page, setPage] = useState<number>(1);
@@ -12,7 +12,7 @@ const StudentData = () => {
     isLoading,
     isFetching,
   } = useGetAllStudentsQuery([
-    { name: "limit", value: 2 },
+    // { name: "limit", value: 2 },
     { name: "page", value: page },
     { name: "sort", value: "id" },
     ...params,
@@ -20,8 +20,10 @@ const StudentData = () => {
 
   const metaData = studentData?.meta;
 
-  const tableData = studentData?.data?.map(({ _id, fullName, id }) => ({
+  const tableData = studentData?.data?.map(({ _id, email, contactNo, fullName, id }) => ({
     key: _id,
+    email,
+    contactNo,
     fullName,
     id,
   }));
@@ -34,6 +36,14 @@ const StudentData = () => {
     {
       title: "Id No.",
       dataIndex: "id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
+    {
+      title: "Contact No.",
+      dataIndex: "contactNo",
     },
     {
       title: "Action",
@@ -74,6 +84,7 @@ const StudentData = () => {
       />
 
       <Pagination
+        style={{ marginTop: "1rem" }}
         current={page}
         onChange={(value) => setPage(value)}
         total={metaData?.total}
