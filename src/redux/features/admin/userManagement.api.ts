@@ -17,6 +17,7 @@ const userManagementApi = baseApi.injectEndpoints({
           params,
         };
       },
+      providesTags: ["user"],
       transformResponse: (response: TResponseRedux<TStudent[]>) => {
         return {
           data: response.data,
@@ -25,11 +26,14 @@ const userManagementApi = baseApi.injectEndpoints({
       },
     }),
     addStudent: builder.mutation({
-      query: (data) => ({
-        url: "/users/create-student",
-        method: "POST",
-        body: data,
-      }),
+      query: (data) => {
+        return {
+          url: "/users/create-student",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["user"],
     }),
     updateStudent: builder.mutation({
       query: ({ id, data }) => {
@@ -39,6 +43,7 @@ const userManagementApi = baseApi.injectEndpoints({
           body: data,
         };
       },
+      invalidatesTags: ["user"],
     }),
     getSingleStudent: builder.query({
       query: (id) => {
@@ -47,6 +52,7 @@ const userManagementApi = baseApi.injectEndpoints({
           method: "GET",
         };
       },
+      providesTags: ["user"],
       transformResponse: (response: TResponseRedux<TStudent>) => {
         return {
           data: response.data,

@@ -19,7 +19,6 @@ const studentDefaultValues = {
   },
   gender: "male",
   bloodGroup: "A+",
-
   email: "sheam2@gmail.com",
   contactNo: "123-456-7890",
   emergencyContactNo: "987-654-3210",
@@ -78,7 +77,10 @@ const CreateStudent = () => {
   return (
     <Row>
       <Col span={24}>
-        <PHForm onSubmit={onSubmit}>
+        <PHForm
+          onSubmit={onSubmit}
+          defaultValues={studentDefaultValues}
+        >
           <Divider>Personal Info.</Divider>
           <Row gutter={8}>
             <Col

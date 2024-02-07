@@ -2,7 +2,7 @@ import { Button, Col, Divider, Row } from "antd";
 import PHForm from "../../../components/form/PHForm";
 import { FieldValues, SubmitHandler } from "react-hook-form";
 import { useGetSingleStudentQuery, useUpdateStudentMutation } from "../../../redux/features/admin/userManagement.api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "sonner";
 import PHInput from "../../../components/form/PHInput";
 import PHSelect from "../../../components/form/PHSelect";
@@ -12,9 +12,11 @@ import {
   useGetAllSemestersQuery,
 } from "../../../redux/features/admin/academicManagement.api";
 import PHDatePicker from "../../../components/form/PHDatePicker";
+import dayjs from "dayjs";
 
 const StudentUpdate = () => {
   const { studentId } = useParams();
+  const navigate = useNavigate();
 
   const [updateStudent] = useUpdateStudentMutation();
   const { data: studentData, isLoading: studentIsLoading } = useGetSingleStudentQuery(studentId);
@@ -34,16 +36,22 @@ const StudentUpdate = () => {
     };
   });
 
+  const defaultStudentValues = {
+    ...studentData?.data,
+    dateOfBirth: dayjs(studentData?.data?.dateOfBirth, "YYYY-MM-DD"),
+    admissionSemester: studentData?.data?.admissionSemester?._id,
+    academicDepartment: studentData?.data?.academicDepartment?._id,
+  };
+
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const toastId = toast.loading("Updating student...");
-    console.log(data);
 
     try {
       const res = await updateStudent({ id: studentId, data: { student: data } });
-      console.log(res);
 
       if (res) {
         toast.success("Student updated successfully!", { id: toastId });
+        navigate("/admin/students-data");
       }
     } catch (error) {
       toast.error("Failed to update student!", { id: toastId });
@@ -55,7 +63,7 @@ const StudentUpdate = () => {
       <Col span={24}>
         <PHForm
           onSubmit={onSubmit}
-          defaultValues={studentData?.data}
+          defaultValues={defaultStudentValues}
         >
           <Divider>Personal Info.</Divider>
           <Row gutter={8}>
@@ -312,7 +320,7 @@ const StudentUpdate = () => {
                   name="admissionSemester"
                   label="Admission Semester"
                   disabled={sIsLoading}
-                  defaultValue={studentData?.data?.admissionSemester?.name}
+                  // defaultValue={studentData?.data?.admissionSemester?.name}
                 />
               )}
             </Col>
@@ -327,7 +335,7 @@ const StudentUpdate = () => {
                   name="academicDepartment"
                   label="Academic Department"
                   disabled={dIsLoading}
-                  defaultValue={studentData?.data?.academicDepartment.name}
+                  // defaultValue={studentData?.data?.academicDepartment?.name}
                 />
               )}
             </Col>
