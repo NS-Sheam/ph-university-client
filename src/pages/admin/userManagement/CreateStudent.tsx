@@ -5,7 +5,11 @@ import { Button, Col, Divider, Row } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
-import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
+import {
+  useGetAllAcademicDepartmentsQuery,
+  useGetAllSemestersQuery,
+} from "../../../redux/features/admin/academicManagement.api";
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
 
 const studentDummyData = {
   password: "student123",
@@ -79,7 +83,10 @@ const studentDefaultValues = {
   academicDepartment: "65b9f5f2048d3715e040809a",
 };
 const CreateStudent = () => {
+  const [addStudent, isLoading, error] = useAddStudentMutation();
+
   const { data: sData, isLoading: sIsLoading } = useGetAllSemestersQuery(undefined);
+  const { data: dData, isLoading: dIsLoading } = useGetAllAcademicDepartmentsQuery(undefined);
   const semesterOptions = sData?.data?.map((item) => {
     return {
       value: item._id,
@@ -87,8 +94,22 @@ const CreateStudent = () => {
     };
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const departmentOptions = dData?.data?.map((item) => {
+    return {
+      value: item._id,
+      label: item.name,
+    };
+  });
+
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    const studentData = {
+      password: "student123",
+      student: data,
+    };
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(studentData));
+    addStudent(formData);
   };
 
   return (
@@ -360,9 +381,10 @@ const CreateStudent = () => {
               lg={{ span: 8 }}
             >
               <PHSelect
-                options={semesterOptions}
+                options={departmentOptions}
                 name="academicDepartment"
                 label="Academic Department"
+                disabled={dIsLoading}
               />
             </Col>
           </Row>
