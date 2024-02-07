@@ -9,6 +9,7 @@ import {
 import { RootState } from "../store";
 import { logout, setUser } from "../features/auth/authSlice";
 import { toast } from "sonner";
+import { TResponseRedux } from "../../types";
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:5000/api/v1",
   credentials: "include",
@@ -26,7 +27,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, Definition
   api,
   extraOptions
 ): Promise<any> => {
-  let result = await baseQuery(args, api, extraOptions);
+  let result = (await baseQuery(args, api, extraOptions)) as TResponseRedux<any>;
 
   if (result?.error?.status === 404) {
     toast.error(result.error.data.message);
@@ -42,7 +43,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<FetchArgs, BaseQueryApi, Definition
     if (data?.data?.accessToken) {
       const user = (api.getState() as RootState).auth.user;
       api.dispatch(setUser({ user, token: data.data.accessToken }));
-      result = await baseQuery(args, api, extraOptions);
+      result = (await baseQuery(args, api, extraOptions)) as TResponseRedux<any>;
     } else {
       api.dispatch(logout());
     }

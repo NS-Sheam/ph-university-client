@@ -13,6 +13,7 @@ import {
 } from "../../../redux/features/admin/academicManagement.api";
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import dayjs from "dayjs";
+import { TResponseRedux, TStudent } from "../../../types";
 
 const StudentUpdate = () => {
   const { studentId } = useParams();
@@ -47,9 +48,9 @@ const StudentUpdate = () => {
     const toastId = toast.loading("Updating student...");
 
     try {
-      const res = await updateStudent({ id: studentId, data: { student: data } });
+      const res = (await updateStudent({ id: studentId, data: { student: data } })) as TResponseRedux<TStudent>;
 
-      if (res) {
+      if (!res.error) {
         toast.success("Student updated successfully!", { id: toastId });
         navigate("/admin/students-data");
       }
