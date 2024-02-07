@@ -89,7 +89,7 @@ const CreateStudent = () => {
               <PHInput
                 type="text"
                 name="name.firstName"
-                label="Name"
+                label="First Name"
               />
             </Col>
             <Col
@@ -100,7 +100,7 @@ const CreateStudent = () => {
               <PHInput
                 type="text"
                 name="name.middleName"
-                label="Name"
+                label="Middle Name"
               />
             </Col>
             <Col
@@ -111,7 +111,7 @@ const CreateStudent = () => {
               <PHInput
                 type="text"
                 name="name.lastName"
-                label="Name"
+                label="Last Name"
               />
             </Col>
             <Col

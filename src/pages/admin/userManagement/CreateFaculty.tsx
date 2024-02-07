@@ -5,56 +5,34 @@ import { Button, Col, Divider, Form, Input, Row } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constants/global";
 import PHDatePicker from "../../../components/form/PHDatePicker";
-import {
-  useGetAllAcademicDepartmentsQuery,
-  useGetAllSemestersQuery,
-} from "../../../redux/features/admin/academicManagement.api";
-import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+import { useGetAllAcademicDepartmentsQuery } from "../../../redux/features/admin/academicManagement.api";
+import { useAddFacultyMutation } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
+import { TFaculty, TResponse } from "../../../types";
 
-const studentDefaultValues = {
+const facultyDefaultValues = {
   name: {
     firstName: "Mr.",
-    middleName: "Student",
-    lastName: "2",
+    middleName: "Mridul",
+    lastName: "Das",
   },
   gender: "male",
-  bloodGroup: "A+",
-
-  email: "sheam2@gmail.com",
-  contactNo: "123-456-7890",
-  emergencyContactNo: "987-654-3210",
-  presentAddress: "123 Main St, Cityville",
-  permanentAddress: "123 Main St, Cityville",
-
-  guardian: {
-    fatherName: "John Smith Sr.",
-    fatherOccupation: "Engineer",
-    fatherContactNo: "111-222-3333",
-    motherName: "Jane Smith",
-    motherOccupation: "Doctor",
-    motherContactNo: "444-555-6666",
-  },
-  localGuardian: {
-    name: "Alice Doe",
-    occupation: "Teacher",
-    contactNo: "777-888-9999",
-    address: "456 Oak St, Townsville",
-  },
-
-  admissionSemester: "65b9f6da048d3715e04080a1",
+  bloodGroup: "B+",
+  // dateOfBirth: "1990-01-01",
+  email: "mridul@example.com",
+  contactNo: "12344567890",
+  emergencyContactNo: "9876543210",
+  presentAddress: "123 Main Street, City",
+  permanentAddress: "456 Oak Avenue, Town",
   academicDepartment: "65b9f5f2048d3715e040809a",
+  designation: "Professor",
+  profileImg: "path/to/profile/image.jpg",
 };
-const CreateFaculty = () => {
-  const [addStudent] = useAddStudentMutation();
 
-  const { data: sData, isLoading: sIsLoading } = useGetAllSemestersQuery(undefined);
+const CreateFaculty = () => {
+  const [addFaculty] = useAddFacultyMutation();
+
   const { data: dData, isLoading: dIsLoading } = useGetAllAcademicDepartmentsQuery(undefined);
-  const semesterOptions = sData?.data?.map((item) => {
-    return {
-      value: item._id,
-      label: `${item.name} ${item.year}`,
-    };
-  });
 
   const departmentOptions = dData?.data?.map((item) => {
     return {
@@ -64,21 +42,34 @@ const CreateFaculty = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const studentData = {
-      password: "student123",
-      student: data,
+    const toastId = toast.loading("Adding Faculty...");
+
+    const facultyData = {
+      password: "faculty123",
+      faculty: data,
     };
 
     const formData = new FormData();
-    formData.append("data", JSON.stringify(studentData));
+    formData.append("data", JSON.stringify(facultyData));
     formData.append("file", data.image);
-    await addStudent(formData);
+    try {
+      const res = (await addFaculty(formData)) as TResponse<TFaculty>;
+      console.log(res);
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else toast.success("Faculty Added Successfully", { id: toastId });
+    } catch (error) {
+      toast.error("Failed to Add Faculty", { id: toastId });
+    }
   };
 
   return (
     <Row>
       <Col span={24}>
-        <PHForm onSubmit={onSubmit}>
+        <PHForm
+          onSubmit={onSubmit}
+          defaultValues={facultyDefaultValues}
+        >
           <Divider>Personal Info.</Divider>
           <Row gutter={8}>
             <Col
@@ -89,7 +80,7 @@ const CreateFaculty = () => {
               <PHInput
                 type="text"
                 name="name.firstName"
-                label="Name"
+                label="First Name"
               />
             </Col>
             <Col
@@ -100,7 +91,7 @@ const CreateFaculty = () => {
               <PHInput
                 type="text"
                 name="name.middleName"
-                label="Name"
+                label="Middle Name"
               />
             </Col>
             <Col
@@ -111,7 +102,7 @@ const CreateFaculty = () => {
               <PHInput
                 type="text"
                 name="name.lastName"
-                label="Name"
+                label="Last Name"
               />
             </Col>
             <Col
@@ -226,122 +217,6 @@ const CreateFaculty = () => {
               />
             </Col>
           </Row>
-          <Divider>Guardian Info.</Divider>
-          <Row gutter={8}>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.fatherName"
-                label="Father's Name"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.fatherOccupation"
-                label="Father's Occupation"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.fatherContactNo"
-                label="Father's Contact No."
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.motherName"
-                label="Mother's Name"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.motherOccupation"
-                label="Mother's Occupation"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="guardian.motherContactNo"
-                label="Mother's Contact No."
-              />
-            </Col>
-          </Row>
-          <Divider>Local Guardian Info.</Divider>
-          <Row gutter={8}>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="localGuardian.name"
-                label="Local Guardian's Name"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="localGuardian.occupation"
-                label="Local Guardian's Occupation"
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="localGuardian.contactNo"
-                label="Local Guardian's Contact No."
-              />
-            </Col>
-            <Col
-              span={24}
-              md={{ span: 12 }}
-              lg={{ span: 8 }}
-            >
-              <PHInput
-                type="text"
-                name="localGuardian.address"
-                label="Local Guardian's Address"
-              />
-            </Col>
-          </Row>
           <Divider>Academic Info.</Divider>
           <Row gutter={8}>
             <Col
@@ -349,11 +224,10 @@ const CreateFaculty = () => {
               md={{ span: 12 }}
               lg={{ span: 8 }}
             >
-              <PHSelect
-                options={semesterOptions}
-                name="admissionSemester"
-                label="Admission Semester"
-                disabled={sIsLoading}
+              <PHInput
+                type="text"
+                name="designation"
+                label="Designation"
               />
             </Col>
             <Col
