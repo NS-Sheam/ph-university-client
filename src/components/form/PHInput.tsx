@@ -5,7 +5,7 @@ type TInputProps = {
   type: string;
   name: string;
   label?: string;
-  disabled: boolean;
+  disabled?: boolean;
 };
 const PHInput = ({ type, name, label, disabled }: TInputProps) => {
   return (
