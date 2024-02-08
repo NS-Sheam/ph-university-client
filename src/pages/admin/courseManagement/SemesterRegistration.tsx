@@ -2,18 +2,16 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
 import { Button, Col, Flex } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
-import { monthOptions } from "../../../constants/global";
-import { semesterOptions, semesterStatusOptions } from "../../../constants/semester";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { academicSemesterSchema } from "../../../schemas/academicManagement.schema";
+import { semesterStatusOptions } from "../../../constants/semester";
 import { toast } from "sonner";
 import { TResponse } from "../../../types/global";
-import { TAcademicSemester } from "../../../types/academicManagement.type";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import PHInput from "../../../components/form/PHInput";
+import { useAddRegisteredSemesterMutation } from "../../../redux/features/admin/courseManagement.api";
 
 const SemesterRegistration = () => {
+  const [addSemester] = useAddRegisteredSemesterMutation();
   const { data: academicSemester } = useGetAllSemestersQuery([{ name: "sort", value: "year" }]);
 
   const academicSemesterOptions = academicSemester?.data?.map((item) => {
@@ -28,20 +26,23 @@ const SemesterRegistration = () => {
 
     const semesterData = {
       ...data,
+      minCredit: Number(data.minCredit),
+      maxCredit: Number(data.maxCredit),
     };
     console.log(semesterData);
 
-    // try {
-    //   console.log(semesterData);
-    //   const res = (await addAcademicSemester(semesterData)) as TResponse<TAcademicSemester>;
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
-    //   }
-    // } catch (error) {
-    //   toast.error("something went wrong", { id: toastId });
-    // }
+    try {
+      const res = (await addSemester(semesterData)) as TResponse<any>;
+      console.log(res);
+
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
+      }
+    } catch (error) {
+      toast.error("something went wrong", { id: toastId });
+    }
   };
 
   return (
@@ -52,8 +53,8 @@ const SemesterRegistration = () => {
       <Col span={6}>
         <PHForm onSubmit={onSubmit}>
           <PHSelect
-            label="Name"
-            name="name"
+            label="Academic Semester"
+            name="academicSemester"
             options={academicSemesterOptions}
           />
           <PHSelect

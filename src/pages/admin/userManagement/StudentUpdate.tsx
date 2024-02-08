@@ -12,8 +12,8 @@ import {
   useGetAllSemestersQuery,
 } from "../../../redux/features/admin/academicManagement.api";
 import PHDatePicker from "../../../components/form/PHDatePicker";
-import dayjs from "dayjs";
 import { TResponseRedux, TStudent } from "../../../types";
+import moment from "moment";
 
 const StudentUpdate = () => {
   const { studentId } = useParams();
@@ -39,7 +39,7 @@ const StudentUpdate = () => {
 
   const defaultStudentValues = {
     ...studentData?.data,
-    dateOfBirth: dayjs(studentData?.data?.dateOfBirth, "YYYY-MM-DD"),
+    dateOfBirth: moment(studentData?.data?.dateOfBirth, "YYYY-MM-DD"),
     admissionSemester: studentData?.data?.admissionSemester?._id,
     academicDepartment: studentData?.data?.academicDepartment?._id,
   };
