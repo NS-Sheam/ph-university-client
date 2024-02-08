@@ -2,17 +2,10 @@ import { FieldValues, SubmitHandler } from "react-hook-form";
 import PHForm from "../../../components/form/PHForm";
 import { Button, Col, Flex } from "antd";
 import PHSelect from "../../../components/form/PHSelect";
-import { semesterStatusOptions } from "../../../constants/semester";
 import { toast } from "sonner";
 import { TResponse } from "../../../types/global";
-import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
-import PHDatePicker from "../../../components/form/PHDatePicker";
 import PHInput from "../../../components/form/PHInput";
-import {
-  useAddCourseMutation,
-  useAddRegisteredSemesterMutation,
-  useGetAllCoursesQuery,
-} from "../../../redux/features/admin/courseManagement.api";
+import { useAddCourseMutation, useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
 
 const CreateCourse = () => {
   const [createCourse] = useAddCourseMutation();
@@ -40,7 +33,6 @@ const CreateCourse = () => {
 
     try {
       const res = (await createCourse(courseData)) as TResponse<any>;
-      console.log(res);
 
       if (res.error) {
         toast.error(res.error.data.message, { id: toastId });
