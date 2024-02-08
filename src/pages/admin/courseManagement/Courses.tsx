@@ -1,10 +1,11 @@
 import { Button, Modal, Table } from "antd";
-import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
+import { useAddFacultiesMutation, useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
 import { useState } from "react";
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
-import { useGetAllAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagement.api";
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
+import { TResponse } from "../../../types";
+import { toast } from "sonner";
 
 const Courses = () => {
   const { data: courses, isFetching } = useGetAllCoursesQuery(undefined);
@@ -26,7 +27,7 @@ const Courses = () => {
       title: "Action",
       dataIndex: "action",
       render: (_, record) => {
-        return <AddFacultyModal data={record} />;
+        return <AddFacultyModal facultyInfo={record} />;
       },
     },
   ];
@@ -39,10 +40,10 @@ const Courses = () => {
   );
 };
 
-const AddFacultyModal = ({ data }) => {
+const AddFacultyModal = ({ facultyInfo }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data: facultiesData } = useGetAllFacultiesQuery(undefined);
-
+  const [addFaculies] = useAddFacultiesMutation();
   const facultiesOptions = facultiesData?.data?.map((item) => ({
     value: item._id,
     label: item.fullName,
@@ -57,8 +58,22 @@ const AddFacultyModal = ({ data }) => {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const handleSubmit = (data) => {
-    console.log(data);
+  const handleSubmit = async (data) => {
+    const toastId = toast.loading("Adding faculties...");
+
+    const facultyData = {
+      courseId: facultyInfo.key,
+      data,
+    };
+    try {
+      const res = (await addFaculies(facultyData)) as TResponse<any>;
+      if (!res.error) {
+        toast.success("Add faculties successfully", { id: toastId, duration: 2000 });
+        handleCancel();
+      }
+    } catch (error) {
+      toast.error("something went wrong", { id: toastId });
+    }
   };
 
   return (
@@ -67,14 +82,14 @@ const AddFacultyModal = ({ data }) => {
       <Modal
         title="Basic Modal"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
+        footer={null}
       >
         <PHForm onSubmit={handleSubmit}>
           <PHSelect
             mode="multiple"
-            label="Faculty"
-            name="faculty"
+            label="Faculties"
+            name="faculties"
             options={facultiesOptions}
           />
           <Button htmlType="submit">Submit</Button>
