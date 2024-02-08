@@ -9,12 +9,13 @@ import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicM
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import PHInput from "../../../components/form/PHInput";
 import {
+  useAddCourseMutation,
   useAddRegisteredSemesterMutation,
   useGetAllCoursesQuery,
 } from "../../../redux/features/admin/courseManagement.api";
 
 const CreateCourse = () => {
-  const [addSemester] = useAddRegisteredSemesterMutation();
+  const [createCourse] = useAddCourseMutation();
   const { data: courses } = useGetAllCoursesQuery(undefined);
   const preRequisiteCoursesOptions = courses?.data?.map((item) => {
     return {
@@ -29,25 +30,26 @@ const CreateCourse = () => {
     const courseData = {
       ...data,
       isDeleted: false,
-      preRequisiteCourses: data.preRequisiteCourses.map((item) => ({
+      code: Number(data.code),
+      credits: Number(data.credits),
+      preRequisiteCourses: data.preRequisiteCourses?.map((item) => ({
         course: item,
         isDeleted: false,
       })),
     };
 
-    console.log(courseData);
+    try {
+      const res = (await createCourse(courseData)) as TResponse<any>;
+      console.log(res);
 
-    // try {
-    //   const res = (await addSemester(semesterData)) as TResponse<any>;
-
-    //   if (res.error) {
-    //     toast.error(res.error.data.message, { id: toastId });
-    //   } else {
-    //     toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
-    //   }
-    // } catch (error) {
-    //   toast.error("something went wrong", { id: toastId });
-    // }
+      if (res.error) {
+        toast.error(res.error.data.message, { id: toastId });
+      } else {
+        toast.success("Create academic semester successfully", { id: toastId, duration: 2000 });
+      }
+    } catch (error) {
+      toast.error("something went wrong", { id: toastId });
+    }
   };
 
   return (
