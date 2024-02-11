@@ -35,6 +35,7 @@ const userManagementApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["user"],
     }),
+    // TODO: I add change password route in the auth api. but in video it shown in here
     updateStudent: builder.mutation({
       query: ({ id, data }) => {
         return {
