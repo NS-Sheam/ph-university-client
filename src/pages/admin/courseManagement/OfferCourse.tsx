@@ -21,11 +21,15 @@ import { TResponse } from "../../../types";
 import PHInput from "../../../components/form/PHInput";
 
 const OfferCourse = () => {
-  const [id, setId] = useState("");
+  const [courseId, setCourseId] = useState("");
   const { data: courses } = useGetAllCoursesQuery(undefined);
   const { data: semesterRegistrations } = useGetAllSemesterRegistrationQuery(undefined);
   const { data: academicFaculties } = useGetAllAcademicFacultiesQuery(undefined);
-  const { data: courseFaculties, isLoading: fIsLoading } = useGetCourseFacultiesQuery(id, { skip: !id });
+  const {
+    data: courseFaculties,
+    isLoading: fIsLoading,
+    isFetching: isFacultyFetching,
+  } = useGetCourseFacultiesQuery(courseId, { skip: !courseId });
   const { data: academicDepartments } = useGetAllAcademicDepartmentsQuery(undefined);
   const [addOfferCourse] = useAddOfferCourseMutation();
 
@@ -140,7 +144,7 @@ const OfferCourse = () => {
                 options={academicDepartmentOptions}
               />
               <PHSelectWithWatch
-                onValueChange={setId}
+                onValueChange={setCourseId}
                 label="Course"
                 name="course"
                 options={courseOptions}
@@ -151,7 +155,7 @@ const OfferCourse = () => {
                 label="Faculty"
                 name="faculty"
                 options={courseFacultiesOption}
-                disabled={!id}
+                disabled={!courseId || isFacultyFetching}
                 loading={fIsLoading}
               />
               <PHSelect
