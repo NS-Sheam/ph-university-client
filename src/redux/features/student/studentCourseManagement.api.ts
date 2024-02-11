@@ -58,22 +58,6 @@ const studentCourseApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["offeredCourse"],
     }),
-    addFaculty: builder.mutation({
-      query: (data) => ({
-        url: "/users/create-faculty",
-        method: "POST",
-        body: data,
-      }),
-    }),
-    updateFaculty: builder.mutation({
-      query: ({ id, data }) => {
-        return {
-          url: `/faculties/${id}`,
-          method: "PATCH",
-          body: data,
-        };
-      },
-    }),
   }),
 });
 
